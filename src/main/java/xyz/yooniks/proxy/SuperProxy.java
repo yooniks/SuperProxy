@@ -13,20 +13,19 @@ import xyz.yooniks.proxy.server.ServerHandler;
 import java.io.File;
 import java.util.logging.Logger;
 
+@Getter
 public class SuperProxy implements MCProxy {
 
-    @Getter
     private final Logger logger = Logger.getLogger("SuperProxy");
 
     private final ProxyConfig config;
     private final Server server;
 
-    @Getter
     private final File dataFolder;
 
     public SuperProxy() {
         this.dataFolder = new File("SuperProxy");
-        this.config = new ProxyConfig();
+        this.config = new ProxyConfig(this);
 
         this.server = new Server("0.0.0.0", this.config.getPort(), MinecraftProtocol.class, new TcpSessionFactory());
         this.server.bind();
