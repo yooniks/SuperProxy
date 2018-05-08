@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <!-- Port for proxy ip | Proxy is using default ip of host  -->
+    <port>1337</port>
+
+    <!-- Message when player get kicked -->
+    <kickMessage>^8Nie masz dostepu do tego serwera!</kickMessage>
+</configuration>
