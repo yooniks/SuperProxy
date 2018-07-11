@@ -1,40 +1,65 @@
 package xyz.yooniks.proxy;
 
-import lombok.Getter;
+import java.io.File;
+import java.util.Scanner;
 import org.spacehq.mc.protocol.MinecraftProtocol;
-import org.spacehq.mc.protocol.ServerLoginHandler;
 import org.spacehq.packetlib.Server;
-import org.spacehq.packetlib.Session;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
-import xyz.yooniks.proxy.config.ProxyConfig;
-import xyz.yooniks.proxy.proxy.MCProxy;
+import xyz.yooniks.proxy.command.console.StopCommand;
+import xyz.yooniks.proxy.command.game.HelpCommand;
+import xyz.yooniks.proxy.exploit.ExploitMapper;
+import xyz.yooniks.proxy.json.JSONManager;
 import xyz.yooniks.proxy.server.ServerHandler;
 
-import java.io.File;
-import java.util.logging.Logger;
+public class SuperProxy extends JavaProxy {
 
-@Getter
-public class SuperProxy implements MCProxy {
+  private static SuperProxy instance;
+  private final Server server;
+  private final JSONManager jsonManager;
+  private final File configFile = new File(this.getDataFolder(), "config.json");
 
-    private final Logger logger = Logger.getLogger("SuperProxy");
+  public SuperProxy() {
+    super("SuperProxy", "0.1-BETA", "yooniks");
+    instance = this;
 
-    private final ProxyConfig config;
-    private final Server server;
+    this.jsonManager = new JSONManager(this, this.configFile);
 
-    private final File dataFolder;
+    this.server = new Server(this.jsonManager.getConfig().host, this.jsonManager.getConfig().port,
+        MinecraftProtocol.class,
+        new TcpSessionFactory());
+    this.server.bind();
+  }
 
-    public SuperProxy() {
-        this.dataFolder = new File("SuperProxy");
-        this.config = new ProxyConfig(this);
+  public static SuperProxy getInstance() {
+    return instance;
+  }
 
-        this.server = new Server("0.0.0.0", this.config.getPort(), MinecraftProtocol.class, new TcpSessionFactory());
-        this.server.bind();
+  @Override
+  public void onEnable() {
+    this.server.setGlobalFlag("login-handler", new ServerHandler(this.userManager));
+
+    this.commandMapper.registerConsoleCommands(
+        new StopCommand("stop", "wylacz", "restart")
+    );
+    this.commandMapper.registerGameCommands(
+        new HelpCommand("help", "pomoc")
+    );
+
+    final Scanner scanner = new Scanner(System.in);
+    while (scanner.hasNextLine()) {
+      final String[] args = scanner.nextLine().split(" ");
+      this.commandMapper.consoleCommandByName(args[0])
+          .ifPresentOrElse((consoleCommand -> consoleCommand.onExecute(args)),
+              () -> System.out.println("Podana komenda nie istnieje! Lista komend: \"help\""));
     }
+  }
 
-    @Override
-    public void onEnable() {
-        this.server.setGlobalFlag("login-handler", new ServerHandler());
-        while (true) { //anti close
-        }
-    }
+  public Server getServer() {
+    return server;
+  }
+
+  public ExploitMapper getExploitMapper() {
+    return exploitMapper;
+  }
+
 }

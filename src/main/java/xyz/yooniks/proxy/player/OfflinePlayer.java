@@ -1,17 +1,23 @@
 package xyz.yooniks.proxy.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.UUID;
 
-@AllArgsConstructor
-@Getter
-@Setter
 public class OfflinePlayer {
 
-    private final String name;
-    private final UUID uuid;
+  private final String name;
+  private final UUID uniqueId;
+
+  public OfflinePlayer(String name, UUID uniqueId) {
+    this.name = name;
+    this.uniqueId = uniqueId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public UUID getUniqueId() {
+    return uniqueId;
+  }
 
 }

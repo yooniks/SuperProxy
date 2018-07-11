@@ -1,29 +1,26 @@
 package xyz.yooniks.proxy.user;
 
-import lombok.AllArgsConstructor;
-import org.json.simple.JSONObject;
-import xyz.yooniks.proxy.SuperProxy;
-
-import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import org.spacehq.mc.auth.data.GameProfile;
+import org.spacehq.packetlib.Session;
 
-@AllArgsConstructor
 public class UserManager {
 
-    //todo: users (json? :thinking:)
+  private final Map<UUID, ProxyUser> userMap = new HashMap<>();
 
-    private final Map<UUID, User> users = new HashMap<>();
-    private final SuperProxy proxy;
-
-    public void loadUsers() {
+  public ProxyUser getUser(String name, UUID uuid) {
+    ProxyUser user = this.userMap.get(uuid);
+    if (user == null) {
+      this.userMap.put(uuid, user = new ProxyUser(name, uuid));
     }
+    return user;
+  }
 
-    private void writeUsersToFile(File file) throws FileNotFoundException {
-        if (!file.exists()) {
-            throw new FileNotFoundException();
-        }
-        JSONObject obj = new JSONObject();
-    }
+  public ProxyUser fromSession(Session session) {
+    final GameProfile profile = session.getFlag("profile");
+    return this.getUser(profile.getName(), profile.getUUID());
+  }
+
 }
