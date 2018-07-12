@@ -1,30 +1,28 @@
 package xyz.yooniks.proxy.user;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import xyz.yooniks.proxy.bot.Bot;
 import xyz.yooniks.proxy.player.Player;
 
-public class ProxyUser {
+public interface ProxyUser {
 
-  private final String name;
-  private final List<Bot> bots = new LinkedList<>();
+  String getName();
 
-  private final UUID uniqueId;
+  UUID getUniqueId();
 
-  public ProxyUser(String name, UUID uniqueId) {
-    this.name = name;
-    this.uniqueId = uniqueId;
-  }
+  List<Bot> getBots();
 
-  public Optional<Player> asProxyPlayer() {
-    return Optional.empty();
-  }
+  Optional<Player> asPlayer();
 
-  public List<Bot> getBots() {
-    return bots;
+  ProxyUserOptions options();
+
+  static interface ProxyUserOptions {
+
+    Optionable<String> botsPrefix();
+
+    Optionable<Boolean> autoReconnect();
   }
 
 }
