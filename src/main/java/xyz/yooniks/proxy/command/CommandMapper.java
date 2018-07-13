@@ -1,5 +1,6 @@
 package xyz.yooniks.proxy.command;
 
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,14 @@ public class CommandMapper {
 
   public void registerConsoleCommands(ConsoleCommand... commands) {
     this.consoleCommands.addAll(Arrays.stream(commands).collect(Collectors.toList()));
+  }
+
+  public ImmutableList<GameCommand> getGameCommands() {
+    return ImmutableList.copyOf(this.gameCommands);
+  }
+
+  public ImmutableList<ConsoleCommand> getConsoleCommands() {
+    return ImmutableList.copyOf(this.consoleCommands);
   }
 
 }

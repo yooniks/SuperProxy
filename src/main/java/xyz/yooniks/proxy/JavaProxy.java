@@ -18,6 +18,9 @@ public abstract class JavaProxy implements Proxy {
 
     this.commandMapper = new CommandMapper();
     this.dataFolder = new File(this.proxyDescription.getName());
+    if (!this.dataFolder.exists()) {
+      this.dataFolder.mkdirs();
+    }
 
   }
 

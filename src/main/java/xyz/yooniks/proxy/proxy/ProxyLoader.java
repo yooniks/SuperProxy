@@ -19,10 +19,12 @@ public class ProxyLoader {
 
     final Scanner scanner = new Scanner(System.in);
     while (scanner.hasNextLine()) {
-      final String[] fixedArgs = scanner.nextLine().split(" ");
-      proxy.getCommandMapper().consoleCommandByName(args[0])
-          .ifPresentOrElse((consoleCommand -> consoleCommand.onExecute(fixedArgs)),
-              () -> System.out.println("Podana komenda nie istnieje! Lista komend: \"help\""));
+      if (args.length > 0) {
+        final String[] fixedArgs = scanner.nextLine().split(" ");
+        proxy.getCommandMapper().consoleCommandByName(fixedArgs[0])
+            .ifPresentOrElse((consoleCommand -> consoleCommand.onExecute(fixedArgs)),
+                () -> System.out.println("Podana komenda nie istnieje! Lista komend: \"help\""));
+      }
     }
   }
 

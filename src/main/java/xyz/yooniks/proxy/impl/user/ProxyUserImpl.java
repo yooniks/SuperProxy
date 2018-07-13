@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import xyz.yooniks.proxy.entity.bot.Bot;
 import xyz.yooniks.proxy.entity.player.Player;
+import xyz.yooniks.proxy.proxy.SuperProxy;
 import xyz.yooniks.proxy.user.Group;
 import xyz.yooniks.proxy.user.ProxyUser;
 
@@ -40,7 +41,7 @@ public class ProxyUserImpl implements ProxyUser {
 
   @Override
   public Optional<Player> asPlayer() {
-    return Optional.empty();
+    return SuperProxy.getInstance().getPlayerFactory().getPlayer(this.uniqueId);
   }
 
   @Override

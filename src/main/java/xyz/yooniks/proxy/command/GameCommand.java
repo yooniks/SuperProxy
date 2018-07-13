@@ -6,20 +6,27 @@ import xyz.yooniks.proxy.user.ProxyUser;
 
 public abstract class GameCommand {
 
+  private final static String COMMAND_PREFIX = "!";
   private final List<String> names;
+  private final String usage;
 
-  public GameCommand(List<String> names) {
+  private GameCommand(String usage, List<String> names) {
+    this.usage = usage;
     this.names = names;
   }
 
-  public GameCommand(String... names) {
-    this.names = Arrays.asList(names);
+  public GameCommand(String usage, String... names) {
+    this(usage, Arrays.asList(names));
   }
 
   public abstract void onExecute(ProxyUser executor, String[] args);
 
-  List<String> getNames() {
+  public List<String> getNames() {
     return this.names;
+  }
+
+  public String getUsage() {
+    return usage;
   }
 
 }

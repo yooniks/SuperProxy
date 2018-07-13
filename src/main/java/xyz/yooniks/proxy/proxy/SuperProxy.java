@@ -7,6 +7,7 @@ import org.spacehq.packetlib.Server;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
 import xyz.yooniks.proxy.JavaProxy;
 import xyz.yooniks.proxy.command.console.StopCommand;
+import xyz.yooniks.proxy.command.game.ConnectCommand;
 import xyz.yooniks.proxy.command.game.HelpCommand;
 import xyz.yooniks.proxy.entity.Location;
 import xyz.yooniks.proxy.entity.player.PlayerFactory;
@@ -14,7 +15,10 @@ import xyz.yooniks.proxy.exploit.ExploitMapper;
 import xyz.yooniks.proxy.impl.player.PlayerFactoryImpl;
 import xyz.yooniks.proxy.impl.user.ProxyUserManagerImpl;
 import xyz.yooniks.proxy.json.JSONManager;
-import xyz.yooniks.proxy.server.ServerHandler;
+import xyz.yooniks.proxy.server.ServerInfoHandler;
+import xyz.yooniks.proxy.server.ServerJoinHandler;
+import xyz.yooniks.proxy.server.ServerListener;
+import xyz.yooniks.proxy.tablist.TablistManager;
 import xyz.yooniks.proxy.user.ProxyUserManager;
 
 public class SuperProxy extends JavaProxy {
@@ -26,6 +30,7 @@ public class SuperProxy extends JavaProxy {
   private final ProxyUserManager userManager;
   private final PlayerFactory playerFactory;
   private final ExploitMapper exploitMapper;
+  private final TablistManager tablistManager;
 
   public SuperProxy() {
     super(new ProxyDescription("SuperProxy", "0.X-BETA", "yooniks"));
@@ -35,6 +40,9 @@ public class SuperProxy extends JavaProxy {
     this.playerFactory = new PlayerFactoryImpl();
     this.exploitMapper = new ExploitMapper(Executors.newFixedThreadPool(2));
     this.jsonManager = new JSONManager(this, new File(this.getDataFolder(), "config.json"));
+    this.jsonManager.create();
+    this.jsonManager.invoke();
+    this.tablistManager = new TablistManager(this.jsonManager.getConfig());
 
     this.server = new Server(this.jsonManager.getConfig().host, this.jsonManager.getConfig().port,
         MinecraftProtocol.class,
@@ -47,19 +55,27 @@ public class SuperProxy extends JavaProxy {
 
   @Override
   public void onEnable() {
-    this.jsonManager.invoke();
+    this.server.setGlobalFlag("login-handler",
+        new ServerJoinHandler(this.userManager, this.playerFactory, this.tablistManager,
+            this.jsonManager.getConfig()));
+    this.server.setGlobalFlag("info-builder", new ServerInfoHandler(this.jsonManager.getConfig()));
+    this.server.setGlobalFlag("compression-threshold", 100);
+    this.server.setGlobalFlag("verify-users", false);
+    this.server.addListener(new ServerListener());
 
-    this.server
-        .setGlobalFlag("login-handler", new ServerHandler(this.userManager, this.playerFactory));
+    this.registerCommands();
 
+    this.server.bind();
+  }
+
+  private void registerCommands() {
     this.getCommandMapper().registerConsoleCommands(
         new StopCommand("stop", "wylacz", "restart")
     );
     this.getCommandMapper().registerGameCommands(
-        new HelpCommand("help", "pomoc")
+        new HelpCommand("!help - wyswietla liste komend", "help", "pomoc"),
+        new ConnectCommand("!connect - laczy z danym serwerem", "connect", "polacz", "join")
     );
-
-    this.server.bind();
   }
 
   @Override
@@ -77,6 +93,14 @@ public class SuperProxy extends JavaProxy {
 
   public ExploitMapper getExploitMapper() {
     return exploitMapper;
+  }
+
+  public JSONManager getJsonManager() {
+    return jsonManager;
+  }
+
+  public TablistManager getTablistManager() {
+    return tablistManager;
   }
 
 }

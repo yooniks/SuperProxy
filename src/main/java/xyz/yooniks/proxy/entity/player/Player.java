@@ -10,6 +10,10 @@ public interface Player extends Entity, Teleportable {
 
   void sendMessage(String... args);
 
+  void sendActionbar(String text);
+
+  void sendTitle(String title, String subtitle);
+
   Session getSession();
 
 }

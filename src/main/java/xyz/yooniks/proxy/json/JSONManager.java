@@ -3,9 +3,15 @@ package xyz.yooniks.proxy.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import xyz.yooniks.proxy.proxy.SuperProxy;
 
 public class JSONManager {
@@ -20,6 +26,34 @@ public class JSONManager {
   public JSONManager(SuperProxy proxy, File configFile) {
     this.proxy = proxy;
     this.configFile = configFile;
+  }
+
+  public void create() {
+    if (!this.configFile.exists()) {
+
+      try {
+        ClassLoader classLoader = JSONManager.class.getClassLoader();
+        InputStream stream = classLoader.getResourceAsStream("config.json");
+
+        if (!this.configFile.createNewFile()) {
+          return;
+        }
+
+        PrintWriter pw = new PrintWriter(new FileWriter(this.configFile));
+        InputStreamReader streamReader = new InputStreamReader(stream, StandardCharsets.UTF_8);
+        BufferedReader reader = new BufferedReader(streamReader);
+        for (String line; (line = reader.readLine()) != null; ) {
+          pw.println(line);
+        }
+
+        pw.close();
+        reader.close();
+        streamReader.close();
+        stream.close();
+      } catch (IOException exception) {
+        exception.printStackTrace();
+      }
+    }
   }
 
   public void invoke() {

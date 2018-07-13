@@ -21,12 +21,19 @@ public class MessageBuilder implements Builder<TextMessage> {
     this.text = Arrays.stream(args).collect(Collectors.joining(" "));
   }
 
-  public void setText(String text) {
+  public MessageBuilder setText(String text) {
     this.text = text;
+    return this;
   }
 
-  public void setText(String... args) {
+  public MessageBuilder setText(String... args) {
     this.text = Arrays.stream(args).collect(Collectors.joining(" "));
+    return this;
+  }
+
+  public MessageBuilder withField(String toReplace, String replacer) {
+    this.text = StringUtils.replace(this.text, "%" + toReplace + "%", replacer);
+    return this;
   }
 
   @Override

@@ -5,7 +5,9 @@ import org.spacehq.mc.auth.data.GameProfile;
 import org.spacehq.mc.protocol.MinecraftProtocol;
 import org.spacehq.mc.protocol.data.SubProtocol;
 import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.values.MessageType;
 import org.spacehq.mc.protocol.packet.ingame.server.ServerChatPacket;
+import org.spacehq.mc.protocol.packet.ingame.server.ServerTitlePacket;
 import org.spacehq.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
 import org.spacehq.packetlib.Session;
 import xyz.yooniks.proxy.entity.Location;
@@ -47,6 +49,27 @@ public class PlayerImpl implements Player {
     final MinecraftProtocol protocol = (MinecraftProtocol) this.session.getPacketProtocol();
     if (this.session.isConnected() && protocol.getSubProtocol() == SubProtocol.GAME) {
       this.session.send(new ServerChatPacket(new MessageBuilder(args).build()));
+    }
+  }
+
+  @Override
+  public void sendActionbar(String text) {
+    if (this.session.isConnected()) {
+      this.session
+          .send(new ServerChatPacket(new MessageBuilder(text).build(), MessageType.NOTIFICATION));
+    }
+  }
+
+  @Override
+  public void sendTitle(String title, String subtitle) {
+    if (this.session.isConnected()) {
+      if (!title.isEmpty()) {
+        this.session.send(new ServerTitlePacket(new MessageBuilder(title).build(), false));
+      }
+      if (!subtitle.isEmpty()) {
+        this.session.send(new ServerTitlePacket(new MessageBuilder(subtitle).build(), true));
+      }
+      //this.session.send(new ServerTitlePacket(-1, -1, -1));
     }
   }
 
