@@ -2,71 +2,42 @@ package xyz.yooniks.proxy;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
-import org.spacehq.packetlib.Server;
 import xyz.yooniks.proxy.command.CommandMapper;
-import xyz.yooniks.proxy.exploit.ExploitMapper;
-import xyz.yooniks.proxy.user.ProxyUserManager;
 
-public abstract class JavaProxy {
+public abstract class JavaProxy implements Proxy {
 
-  private static JavaProxy proxy;
-
-  final CommandMapper commandMapper;
-  final ExploitMapper exploitMapper;
-  final ProxyUserManager userManager;
+  private final CommandMapper commandMapper;
 
   private final Logger logger = Logger.getLogger("SuperProxy");
   private final ProxyDescription proxyDescription;
   private final File dataFolder;
 
-  private JavaProxy(ProxyDescription proxyDescription, ProxyUserManager userManager) {
-    proxy = this;
+  public JavaProxy(ProxyDescription proxyDescription) {
     this.proxyDescription = proxyDescription;
 
     this.commandMapper = new CommandMapper();
-    this.exploitMapper = new ExploitMapper(Executors
-        .newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 4));
     this.dataFolder = new File(this.proxyDescription.getName());
 
-    this.userManager = userManager;
-  }
-
-  JavaProxy(String name, String version, ProxyUserManager userManager, String... authors) {
-    this(new ProxyDescription(name, authors, version), userManager);
-  }
-
-  public static JavaProxy getProxy() {
-    return proxy;
-  }
-
-  public abstract void onEnable();
-
-  public abstract Server getServer();
-
-  public ProxyDescription getProxyDescription() {
-    return proxyDescription;
   }
 
   public CommandMapper getCommandMapper() {
     return commandMapper;
   }
 
-  public ExploitMapper getExploitMapper() {
-    return exploitMapper;
-  }
-
-  public ProxyUserManager getUserManager() {
-    return userManager;
-  }
-
-  public File getDataFolder() {
-    return dataFolder;
-  }
-
+  @Override
   public Logger getLogger() {
     return logger;
+  }
+
+  @Override
+  public ProxyDescription getDescription() {
+    return proxyDescription;
+  }
+
+  @Override
+  public File getDataFolder() {
+    return dataFolder;
   }
 
   public static class ProxyDescription {
@@ -75,10 +46,10 @@ public abstract class JavaProxy {
     final String[] authors;
     final String version;
 
-    ProxyDescription(String name, String[] authors, String version) {
+    public ProxyDescription(String name, String version, String... authors) {
       this.name = name;
-      this.authors = authors;
       this.version = version;
+      this.authors = authors;
     }
 
     public String getName() {

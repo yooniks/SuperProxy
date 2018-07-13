@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import xyz.yooniks.proxy.SuperProxy;
+import xyz.yooniks.proxy.proxy.SuperProxy;
 
 public class JSONManager {
 

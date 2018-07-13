@@ -3,8 +3,8 @@ package xyz.yooniks.proxy.user;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import xyz.yooniks.proxy.bot.Bot;
-import xyz.yooniks.proxy.player.Player;
+import xyz.yooniks.proxy.entity.bot.Bot;
+import xyz.yooniks.proxy.entity.player.Player;
 
 public interface ProxyUser {
 
@@ -16,13 +16,17 @@ public interface ProxyUser {
 
   Optional<Player> asPlayer();
 
-  ProxyUserOptions options();
+  ProxyUserOptions getOptions();
 
-  static interface ProxyUserOptions {
+  Group getGroup();
 
-    Optionable<String> botsPrefix();
+  void setGroup(Group group);
 
-    Optionable<Boolean> autoReconnect();
+  interface ProxyUserOptions {
+
+    Optionable<String> getBotsPrefix();
+
+    Optionable<Boolean> getAutoReconnect();
   }
 
 }

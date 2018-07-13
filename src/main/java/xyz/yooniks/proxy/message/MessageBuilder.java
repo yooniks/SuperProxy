@@ -3,9 +3,10 @@ package xyz.yooniks.proxy.message;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
+import org.spacehq.mc.protocol.data.message.TextMessage;
 import xyz.yooniks.proxy.util.Builder;
 
-public class MessageBuilder implements Builder<String> {
+public class MessageBuilder implements Builder<TextMessage> {
 
   private String text;
 
@@ -29,7 +30,10 @@ public class MessageBuilder implements Builder<String> {
   }
 
   @Override
-  public String build() {
-    return StringUtils.replace(this.text, "&", "§");
+  public TextMessage build() {
+    return new TextMessage(
+        StringUtils.replace(this.text, "&", "§")
+    );
   }
+
 }

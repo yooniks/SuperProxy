@@ -1,4 +1,4 @@
-package xyz.yooniks.proxy.impl;
+package xyz.yooniks.proxy.impl.user;
 
 import xyz.yooniks.proxy.user.Optionable;
 import xyz.yooniks.proxy.user.ProxyUser.ProxyUserOptions;
@@ -15,12 +15,12 @@ public class ProxyUserOptionsImpl implements ProxyUserOptions {
   }
 
   @Override
-  public Optionable<Boolean> autoReconnect() {
+  public Optionable<Boolean> getAutoReconnect() {
     return this.autoReconnect;
   }
 
   @Override
-  public Optionable<String> botsPrefix() {
+  public Optionable<String> getBotsPrefix() {
     return this.botsPrefix;
   }
 

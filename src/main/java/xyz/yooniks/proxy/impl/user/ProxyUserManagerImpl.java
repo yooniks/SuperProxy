@@ -1,4 +1,4 @@
-package xyz.yooniks.proxy.impl;
+package xyz.yooniks.proxy.impl.user;
 
 
 import java.util.HashMap;
