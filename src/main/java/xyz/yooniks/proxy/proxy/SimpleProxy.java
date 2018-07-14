@@ -3,9 +3,9 @@ package xyz.yooniks.proxy.proxy;
 import org.spacehq.mc.protocol.MinecraftProtocol;
 import org.spacehq.packetlib.Server;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
-import xyz.yooniks.proxy.JavaProxy;
+import xyz.yooniks.proxy.AbstractProxy;
 
-public class SimpleProxy extends JavaProxy {
+public class SimpleProxy extends AbstractProxy {
 
   private final Server server;
 

@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 import org.spacehq.mc.protocol.MinecraftProtocol;
 import org.spacehq.packetlib.Server;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
-import xyz.yooniks.proxy.JavaProxy;
+import xyz.yooniks.proxy.AbstractProxy;
 import xyz.yooniks.proxy.command.console.StopCommand;
 import xyz.yooniks.proxy.command.game.ConnectCommand;
 import xyz.yooniks.proxy.command.game.HelpCommand;
@@ -21,7 +21,7 @@ import xyz.yooniks.proxy.server.ServerListener;
 import xyz.yooniks.proxy.tablist.TablistManager;
 import xyz.yooniks.proxy.user.ProxyUserManager;
 
-public class SuperProxy extends JavaProxy {
+public class SuperProxy extends AbstractProxy {
 
   public final static Location SPAWN_LOCATION = new Location(0, -1337, 0);
   private static SuperProxy instance;

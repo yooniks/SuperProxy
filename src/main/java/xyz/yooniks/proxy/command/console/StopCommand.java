@@ -15,7 +15,7 @@ public class StopCommand extends ConsoleCommand {
   public void onExecute(String[] args) {
     final Server server = SuperProxy.getInstance().getServer();
     server.getSessions()
-        .forEach(session -> session.disconnect(ChatColor.YELLOW + "ProxyServer wylaczone!"));
+        .forEach(session -> session.disconnect(ChatColor.YELLOW + "Proxy wylaczone!"));
     server.close(false);
 
     System.exit(1);

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 import xyz.yooniks.proxy.command.CommandMapper;
 
-public abstract class JavaProxy implements Proxy {
+public abstract class AbstractProxy implements Proxy {
 
   private final CommandMapper commandMapper;
 
@@ -13,7 +13,7 @@ public abstract class JavaProxy implements Proxy {
   private final ProxyDescription proxyDescription;
   private final File dataFolder;
 
-  public JavaProxy(ProxyDescription proxyDescription) {
+  public AbstractProxy(ProxyDescription proxyDescription) {
     this.proxyDescription = proxyDescription;
 
     this.commandMapper = new CommandMapper();
