@@ -1,4 +1,4 @@
-package xyz.yooniks.proxy.entity;
+package xyz.yooniks.proxy.entity.teleport;
 
 public interface Teleportable {
 
