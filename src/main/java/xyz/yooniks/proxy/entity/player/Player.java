@@ -16,4 +16,6 @@ public interface Player extends Entity, Teleportable {
 
   Session getSession();
 
+  void setSession(Session session);
+
 }

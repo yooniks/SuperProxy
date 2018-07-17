@@ -16,28 +16,27 @@ import xyz.yooniks.proxy.message.MessageBuilder;
 
 public class PlayerImpl implements Player {
 
-  private final GameProfile profile;
   private final Location location;
-  private final Session session;
 
   private final String name;
   private final UUID uniqueId;
 
+  private Session session;
+
   public PlayerImpl(Session session) {
     final GameProfile profile = session.getFlag("profile");
-    this.name = profile.getName(); //i prefer to hold it like that, at this moment
+    this.name = profile.getName();
     this.uniqueId = profile.getUUID();
-    this.profile = profile;
 
     this.session = session;
-    this.location = new Location(new Position(0, 80, 0), 0.0F, 0.0F);
+    this.location = new Location();
   }
 
   @Override
   public void sendMessage(String text) {
     final MinecraftProtocol protocol = (MinecraftProtocol) this.session.getPacketProtocol();
     if (this.session.isConnected() && protocol.getSubProtocol() == SubProtocol.GAME) {
-      this.session.send(new ServerChatPacket(new MessageBuilder(text).build()));
+      this.session.send(new ServerChatPacket(new MessageBuilder("&cSuperProxy&7: " + text).build()));
     }
   }
 
@@ -69,7 +68,7 @@ public class PlayerImpl implements Player {
       if (!subtitle.isEmpty()) {
         this.session.send(new ServerTitlePacket(new MessageBuilder(subtitle).build(), true));
       }
-      //this.session.send(new ServerTitlePacket(-1, -1, -1));
+      this.session.send(new ServerTitlePacket(0, 20, 5));
     }
   }
 
@@ -85,6 +84,11 @@ public class PlayerImpl implements Player {
   @Override
   public Session getSession() {
     return session;
+  }
+
+  @Override
+  public void setSession(Session session) {
+    this.session = session;
   }
 
   @Override

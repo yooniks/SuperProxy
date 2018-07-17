@@ -6,7 +6,7 @@ package org.spacehq.mc.protocol;
 
 import org.spacehq.packetlib.Session;
 
-public interface ServerLoginHandler
-{
-    void loggedIn(final Session p0);
+public interface ServerLoginHandler {
+
+  void loggedIn(final Session p0);
 }

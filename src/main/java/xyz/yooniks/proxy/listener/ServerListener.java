@@ -1,4 +1,4 @@
-package xyz.yooniks.proxy.server;
+package xyz.yooniks.proxy.listener;
 
 import org.spacehq.packetlib.event.server.ServerAdapter;
 import org.spacehq.packetlib.event.server.SessionAddedEvent;

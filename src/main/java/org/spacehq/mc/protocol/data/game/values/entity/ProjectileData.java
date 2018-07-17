@@ -4,32 +4,32 @@
 
 package org.spacehq.mc.protocol.data.game.values.entity;
 
-public class ProjectileData implements ObjectData
-{
-    private int ownerId;
-    
-    public ProjectileData(final int ownerId) {
-        this.ownerId = ownerId;
+public class ProjectileData implements ObjectData {
+
+  private int ownerId;
+
+  public ProjectileData(final int ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public int getOwnerId() {
+    return this.ownerId;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
     }
-    
-    public int getOwnerId() {
-        return this.ownerId;
+    if (o == null || this.getClass() != o.getClass()) {
+      return false;
     }
-    
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
-        final ProjectileData that = (ProjectileData)o;
-        return this.ownerId == that.ownerId;
-    }
-    
-    @Override
-    public int hashCode() {
-        return this.ownerId;
-    }
+    final ProjectileData that = (ProjectileData) o;
+    return this.ownerId == that.ownerId;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.ownerId;
+  }
 }

@@ -3,6 +3,7 @@ package xyz.yooniks.proxy.user;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.spacehq.packetlib.Session;
 import xyz.yooniks.proxy.entity.bot.Bot;
 import xyz.yooniks.proxy.entity.player.Player;
 
@@ -22,11 +23,10 @@ public interface ProxyUser {
 
   void setGroup(Group group);
 
-  interface ProxyUserOptions {
+  Optional<Session> getFakeSession();
 
-    Optionable<String> getBotsPrefix();
+  void setFakeSession(Session session);
 
-    Optionable<Boolean> getAutoReconnect();
-  }
+  void sendMessage(String text);
 
 }

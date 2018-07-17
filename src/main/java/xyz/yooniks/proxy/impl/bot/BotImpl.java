@@ -3,9 +3,9 @@ package xyz.yooniks.proxy.impl.bot;
 import java.util.Optional;
 import java.util.UUID;
 import org.spacehq.packetlib.Session;
+import xyz.yooniks.proxy.SuperProxyImpl;
 import xyz.yooniks.proxy.entity.Location;
 import xyz.yooniks.proxy.entity.bot.Bot;
-import xyz.yooniks.proxy.proxy.SuperProxy;
 import xyz.yooniks.proxy.user.ProxyUser;
 
 public class BotImpl implements Bot {
@@ -33,7 +33,7 @@ public class BotImpl implements Bot {
 
   public Optional<ProxyUser> findOwner() {
     return Optional.ofNullable(
-        SuperProxy.getInstance().getUserManager()
+        SuperProxyImpl.getInstance().getUserManager()
             .getUser(this.ownerInfo.getName(), this.ownerInfo.getUniqueId())
     );
   }

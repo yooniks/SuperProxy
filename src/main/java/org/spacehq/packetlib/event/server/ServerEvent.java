@@ -4,7 +4,7 @@
 
 package org.spacehq.packetlib.event.server;
 
-public interface ServerEvent
-{
-    void call(final ServerListener p0);
+public interface ServerEvent {
+
+  void call(final ServerListener p0);
 }

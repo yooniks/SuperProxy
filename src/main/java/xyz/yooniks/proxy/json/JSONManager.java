@@ -12,18 +12,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import xyz.yooniks.proxy.proxy.SuperProxy;
+import xyz.yooniks.proxy.SuperProxyImpl;
 
 public class JSONManager {
 
   //borrowed: https://github.com/SocketByte/OpenSectors/blob/master/OpenSectorSystem/src/main/java/pl/socketbyte/opensectors/system/json/JSONConfig.java
 
-  private final SuperProxy proxy;
+  private final SuperProxyImpl proxy;
   private final File configFile;
 
   private JSONConfig config;
 
-  public JSONManager(SuperProxy proxy, File configFile) {
+  public JSONManager(SuperProxyImpl proxy, File configFile) {
     this.proxy = proxy;
     this.configFile = configFile;
   }

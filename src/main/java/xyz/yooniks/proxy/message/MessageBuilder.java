@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.spacehq.mc.protocol.data.message.TextMessage;
-import xyz.yooniks.proxy.util.Builder;
+import xyz.yooniks.proxy.helper.Builder;
 
 public class MessageBuilder implements Builder<TextMessage> {
 
@@ -34,6 +34,11 @@ public class MessageBuilder implements Builder<TextMessage> {
   public MessageBuilder withField(String toReplace, String replacer) {
     this.text = StringUtils.replace(this.text, "%" + toReplace + "%", replacer);
     return this;
+  }
+
+  @Override
+  public String toString() {
+    return this.build().getText();
   }
 
   @Override

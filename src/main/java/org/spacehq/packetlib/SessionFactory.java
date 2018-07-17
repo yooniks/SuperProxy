@@ -4,9 +4,9 @@
 
 package org.spacehq.packetlib;
 
-public interface SessionFactory
-{
-    Session createClientSession(final Client p0);
-    
-    ConnectionListener createServerListener(final Server p0);
+public interface SessionFactory {
+
+  Session createClientSession(final Client p0);
+
+  ConnectionListener createServerListener(final Server p0);
 }

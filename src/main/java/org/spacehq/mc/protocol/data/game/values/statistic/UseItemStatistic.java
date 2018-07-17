@@ -4,32 +4,32 @@
 
 package org.spacehq.mc.protocol.data.game.values.statistic;
 
-public class UseItemStatistic implements Statistic
-{
-    private int id;
-    
-    public UseItemStatistic(final int id) {
-        this.id = id;
+public class UseItemStatistic implements Statistic {
+
+  private int id;
+
+  public UseItemStatistic(final int id) {
+    this.id = id;
+  }
+
+  public int getId() {
+    return this.id;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
     }
-    
-    public int getId() {
-        return this.id;
+    if (o == null || this.getClass() != o.getClass()) {
+      return false;
     }
-    
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
-        final UseItemStatistic that = (UseItemStatistic)o;
-        return this.id == that.id;
-    }
-    
-    @Override
-    public int hashCode() {
-        return this.id;
-    }
+    final UseItemStatistic that = (UseItemStatistic) o;
+    return this.id == that.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.id;
+  }
 }

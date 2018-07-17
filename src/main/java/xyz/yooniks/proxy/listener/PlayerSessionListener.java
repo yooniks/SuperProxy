@@ -1,8 +1,7 @@
-package xyz.yooniks.proxy.server;
+package xyz.yooniks.proxy.listener;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.spacehq.mc.protocol.packet.ingame.client.ClientChatPacket;
 import org.spacehq.packetlib.event.session.ConnectedEvent;
 import org.spacehq.packetlib.event.session.DisconnectedEvent;
@@ -10,14 +9,16 @@ import org.spacehq.packetlib.event.session.DisconnectingEvent;
 import org.spacehq.packetlib.event.session.PacketReceivedEvent;
 import org.spacehq.packetlib.event.session.PacketSentEvent;
 import org.spacehq.packetlib.event.session.SessionListener;
-import xyz.yooniks.proxy.proxy.SuperProxy;
+import xyz.yooniks.proxy.command.basic.CommandManager;
 import xyz.yooniks.proxy.user.ProxyUser;
 
 public class PlayerSessionListener implements SessionListener {
 
+  private final CommandManager commandManager;
   private final ProxyUser user;
 
-  public PlayerSessionListener(ProxyUser user) {
+  public PlayerSessionListener(CommandManager commandManager, ProxyUser user) {
+    this.commandManager = commandManager;
     this.user = user;
   }
 
@@ -31,17 +32,14 @@ public class PlayerSessionListener implements SessionListener {
     if (event.getPacket() instanceof ClientChatPacket) {
       final ClientChatPacket packet = event.getPacket();
       final String message = packet.getMessage();
-      final String commandName = StringUtils.replace(message.split(" ")[0], "!", "");
-      final String[] allArgs = message.split(" ");
-      final String[] args = Arrays.copyOfRange(allArgs, 1, allArgs.length);
+      final String commandName = StringUtils.replaceFirst(message, "!", "");
 
-      this.user.asPlayer().ifPresent(player -> player.sendMessage(commandName + ": " + Arrays
-          .stream(args).collect(Collectors.joining(" "))));
+      final String[] args = message.split(" ");
+      final String[] argsForCommand = Arrays.copyOfRange(args, 1, args.length);
 
-      SuperProxy.getInstance().getCommandMapper()
-          .gameCommandByName(commandName)
-          .ifPresentOrElse((command -> command.onExecute(user, args)),
-              () -> user.asPlayer().ifPresent(player -> player.sendMessage("works fine")));
+      this.commandManager
+          .findConsoleCommand(commandName)
+          .ifPresent(command -> command.getCommandExecutor().execute(this.user, argsForCommand));
 
     }
   }
@@ -51,7 +49,10 @@ public class PlayerSessionListener implements SessionListener {
   }
 
   @Override
-  public void disconnected(DisconnectedEvent p0) {
+  public void disconnected(DisconnectedEvent event) {
+    this.user.asPlayer().ifPresent(player ->
+        player.setSession(null)
+    );
   }
 
   @Override

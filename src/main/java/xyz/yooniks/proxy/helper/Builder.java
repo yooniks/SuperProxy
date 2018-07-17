@@ -1,4 +1,4 @@
-package xyz.yooniks.proxy.util;
+package xyz.yooniks.proxy.helper;
 
 public interface Builder<T> {
 

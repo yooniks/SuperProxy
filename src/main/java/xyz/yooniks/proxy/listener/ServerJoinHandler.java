@@ -1,4 +1,4 @@
-package xyz.yooniks.proxy.server;
+package xyz.yooniks.proxy.listener;
 
 import java.util.function.Consumer;
 import org.apache.commons.lang.StringUtils;
@@ -14,46 +14,38 @@ import org.spacehq.mc.protocol.packet.ingame.server.entity.player.ServerSetExper
 import org.spacehq.mc.protocol.packet.ingame.server.world.ServerSpawnPositionPacket;
 import org.spacehq.mc.protocol.packet.ingame.server.world.ServerUpdateTimePacket;
 import org.spacehq.packetlib.Session;
+import xyz.yooniks.proxy.SuperProxy;
 import xyz.yooniks.proxy.entity.player.Player;
-import xyz.yooniks.proxy.entity.player.PlayerFactory;
 import xyz.yooniks.proxy.json.JSONConfig;
-import xyz.yooniks.proxy.tablist.TablistManager;
 import xyz.yooniks.proxy.user.ProxyUser;
-import xyz.yooniks.proxy.user.ProxyUserManager;
 
 public class ServerJoinHandler implements ServerLoginHandler {
 
-  private final ProxyUserManager userManager;
-  private final PlayerFactory playerFactory;
-  private final TablistManager tablistManager;
-  private final JSONConfig jsonConfig;
+  private final SuperProxy proxy;
 
-  public ServerJoinHandler(ProxyUserManager userManager, PlayerFactory playerFactory,
-      TablistManager tablistManager,
-      JSONConfig jsonConfig) {
-    this.userManager = userManager;
-    this.playerFactory = playerFactory;
-    this.tablistManager = tablistManager;
-    this.jsonConfig = jsonConfig;
+  public ServerJoinHandler(SuperProxy proxy) {
+    this.proxy = proxy;
   }
 
   @Override
   public void loggedIn(Session session) {
-    final ProxyUser user = this.userManager.fromSession(session);
-    if (!this.playerFactory.isProduced(user.getUniqueId())) {
-      this.playerFactory.produce(session);
+    final ProxyUser user = this.proxy.getUserManager().fromSession(session);
+    if (!this.proxy.getPlayerFactory().isProduced(user.getUniqueId())) {
+      this.proxy.getPlayerFactory().produce(session);
     }
 
     this.sendWorldPackets(session); //send position packets
-    this.tablistManager.init(user); //send tab packet
-    session.addListener(new PlayerSessionListener(user));
+    this.proxy.getTablistManager().refreshTablist(user); //send tab packet
+    session.addListener(new PlayerSessionListener(this.proxy.getCommandManager(), user));
 
+    final JSONConfig config = this.proxy.getJsonManager().getConfig();
     final Consumer<Player> playerConsumer = (player) -> {
+      player.setSession(session);
       player.sendMessage(
-          StringUtils.replace(this.jsonConfig.join_message_chat, "%name%", player.getName()));
-      player.sendTitle(this.jsonConfig.join_message_title, this.jsonConfig.join_message_subtitle);
-      player.sendActionbar(this.jsonConfig.join_message_actionbar);
-      //player.teleport(SuperProxy.SPAWN_LOCATION);
+          StringUtils.replace(config.join_message_chat, "%name%", player.getName()));
+      player.sendTitle(config.join_message_title, config.join_message_subtitle);
+      player.sendActionbar(config.join_message_actionbar);
+      //player.teleport(SuperProxyImpl.SPAWN_LOCATION);
     };
 
     user.asPlayer().ifPresent(playerConsumer);

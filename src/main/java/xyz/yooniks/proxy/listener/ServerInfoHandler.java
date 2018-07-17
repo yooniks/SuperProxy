@@ -1,4 +1,4 @@
-package xyz.yooniks.proxy.server;
+package xyz.yooniks.proxy.listener;
 
 import java.util.UUID;
 import org.spacehq.mc.auth.data.GameProfile;
@@ -21,10 +21,8 @@ public class ServerInfoHandler implements ServerInfoBuilder {
   @Override
   public ServerStatusInfo buildInfo(Session session) {
     return new ServerStatusInfo(
-        new VersionInfo(new MessageBuilder(this.jsonConfig.motd_description).build().toString(),
-            48),
-        new PlayerInfo(-1, 0, new GameProfile[]{new GameProfile(UUID.randomUUID(),
-            new MessageBuilder(this.jsonConfig.motd_description_version).build().toString())}),
+        new VersionInfo(new MessageBuilder(this.jsonConfig.motd_description).toString(), 48),
+        new PlayerInfo(-1, 0, new GameProfile[] { new GameProfile(UUID.randomUUID(), new MessageBuilder(this.jsonConfig.motd_description_version).toString()) } ),
         new MessageBuilder(this.jsonConfig.motd).build(),
         null);
   }

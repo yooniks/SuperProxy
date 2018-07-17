@@ -13,7 +13,8 @@ public class JSONConfig {
   public String join_message_title;
   public String join_message_subtitle;
 
-  public String crash_message;
+  public String crash_message_start;
+  public String crash_message_end;
 
   public List<String> tab_elements;
   public String tab_header;

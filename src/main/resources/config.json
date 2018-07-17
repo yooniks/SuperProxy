@@ -2,13 +2,14 @@
   "motd": "&6SuperProxy &7v0.X BETA&7, by &6yooniks&7..",
   "motd_description": "&7Coming soon..",
   "motd_description_version": "&7Works completed in &610%",
-  "join_message_chat": "&7Witaj, &6%name%&7!",
+  "join_message_chat": "&7Witaj, %name% na &cSuperProxy&7, stworzone przez: &6yooniks_tendev&7, lista komend dostepna pod: \"!help\" = )",
   "join_message_actionbar": "&7Works completed in &610%",
   "join_message_title": "&6SuperProxy &7v0.X BETA",
   "join_message_subtitle": "&7by &6yooniks_tendev",
-  "crash_message": "&7Proba zlagowania serwera docelowego.. &8(&7Ilosc pakietow: &6%amount%&7, exploit: &6%exploit%&8)",
+  "crash_message_start": "&7Proba zlagowania serwera docelowego.. &8(&7Ilosc pakietow: &6%amount%&7, exploit: &6%exploit%, boty: &6%bots%&8)",
+  "crash_message_end": "&7Zakonczono crashowanie metoda &6%exploit%&7, w: &6%time%ms&7.",
   "host": "0.0.0.0",
   "port": 1337,
   "tab_header": "&6SuperProxy &7v0.X BETA\n&7Works completed in: &610%",
-  "tab_footer": "&7by &6yooniks_tendev"
+  "tab_footer": "&7Ostatni pakiet: &3%last_packet_name% &8(&7%last_packet_time% ms temu&8)\n&7proxy zaprogramowane przez: &6yooniks_tendev"
 }
