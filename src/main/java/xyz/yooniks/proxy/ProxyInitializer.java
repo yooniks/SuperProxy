@@ -5,8 +5,16 @@ import xyz.yooniks.proxy.proxy.ProxyDescription;
 
 public class ProxyInitializer {
 
+  private final SuperProxy superProxy;
+
+  ProxyInitializer(SuperProxy superProxy) {
+    this.superProxy = superProxy;
+  }
+
   public static void main(String[] args) {
-    final SuperProxy proxy = new SuperProxyImpl();
+    final ProxyInitializer initializer = new ProxyInitializer(new SuperProxyImpl());
+    final SuperProxy proxy = initializer.superProxy;
+
     final Thread mainThread = new Thread(proxy::onEnable);
 
     final ProxyDescription description = proxy.getDescription();
@@ -14,10 +22,6 @@ public class ProxyInitializer {
 
     mainThread.setName("ProxyInitializer " + description.getName() + " (" + description.getVersion() + ")");
     mainThread.run();
-
-    //todo
-    //ThreadFactoryBuilder builder = new ThreadFactoryBuilder();
-    //builder.
 
     final Scanner scanner = new Scanner(System.in);
 
