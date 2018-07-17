@@ -26,19 +26,21 @@ public class ClientPacketsTransmitter implements SessionListener {
 
   @Override
   public void packetReceived(PacketReceivedEvent event) {
-    final MinecraftProtocol mp2 = (MinecraftProtocol) session.getPacketProtocol();
-    if (mp2.getSubProtocol() != SubProtocol.GAME) {
-      if (session.isConnected()) {
-      }
+    final MinecraftProtocol protocol = (MinecraftProtocol) session.getPacketProtocol();
+    if (protocol.getSubProtocol() != SubProtocol.GAME) {
       return;
     }
     if (event.getPacket() instanceof ClientChatPacket) {
-      //handle packet, e.g modify text
-      session.send(event.getPacket());
+      //handle packet, e.g modify text for illegal characters etc.
+      final ClientChatPacket packet = event.getPacket();
+      if (packet.getMessage().startsWith("!")) {
+        return;
+      }
+      this.session.send(event.getPacket());
       return;
     }
     if (!(event.getPacket() instanceof LoginDisconnectPacket)) {
-      session.send(event.getPacket());
+      this.session.send(event.getPacket());
     }
   }
 
