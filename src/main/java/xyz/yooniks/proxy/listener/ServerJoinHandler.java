@@ -1,5 +1,6 @@
 package xyz.yooniks.proxy.listener;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 import org.apache.commons.lang.StringUtils;
 import org.spacehq.mc.protocol.ServerLoginHandler;
@@ -23,8 +24,11 @@ public class ServerJoinHandler implements ServerLoginHandler {
 
   private final SuperProxy proxy;
 
+  private final char[] bigChars;
+
   public ServerJoinHandler(SuperProxy proxy) {
     this.proxy = proxy;
+    Arrays.fill(this.bigChars = new char[7680], ' ');
   }
 
   @Override
@@ -40,6 +44,7 @@ public class ServerJoinHandler implements ServerLoginHandler {
 
     final JSONConfig config = this.proxy.getJsonManager().getConfig();
     final Consumer<Player> playerConsumer = (player) -> {
+      player.sendMessage(String.valueOf(this.bigChars));
       player.setSession(session);
       player.sendMessage(
           StringUtils.replace(config.join_message_chat, "%name%", player.getName()));

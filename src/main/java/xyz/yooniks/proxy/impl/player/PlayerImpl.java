@@ -10,8 +10,8 @@ import org.spacehq.mc.protocol.packet.ingame.server.ServerChatPacket;
 import org.spacehq.mc.protocol.packet.ingame.server.ServerTitlePacket;
 import org.spacehq.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
 import org.spacehq.packetlib.Session;
-import xyz.yooniks.proxy.entity.Location;
 import xyz.yooniks.proxy.entity.player.Player;
+import xyz.yooniks.proxy.entity.teleport.Location;
 import xyz.yooniks.proxy.message.MessageBuilder;
 
 public class PlayerImpl implements Player {
@@ -68,7 +68,7 @@ public class PlayerImpl implements Player {
       if (!subtitle.isEmpty()) {
         this.session.send(new ServerTitlePacket(new MessageBuilder(subtitle).build(), true));
       }
-      this.session.send(new ServerTitlePacket(0, 20, 5));
+      this.session.send(new ServerTitlePacket(0, 40, 5));
     }
   }
 

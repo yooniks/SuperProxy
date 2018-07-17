@@ -4,8 +4,8 @@ import java.util.Optional;
 import java.util.UUID;
 import org.spacehq.packetlib.Session;
 import xyz.yooniks.proxy.SuperProxyImpl;
-import xyz.yooniks.proxy.entity.Location;
 import xyz.yooniks.proxy.entity.bot.Bot;
+import xyz.yooniks.proxy.entity.teleport.Location;
 import xyz.yooniks.proxy.user.ProxyUser;
 
 public class BotImpl implements Bot {
