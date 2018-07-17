@@ -88,9 +88,7 @@ public class SuperProxyImpl implements SuperProxy {
   public void onEnable() {
     this.tablistManager.startTask(this.userManager);
 
-    this.server.setGlobalFlag("login-handler",
-        new ServerJoinHandler(this.userManager, this.playerFactory, this.tablistManager,
-            this.jsonManager.getConfig()));
+    this.server.setGlobalFlag("login-handler", new ServerJoinHandler(this));
     this.server.setGlobalFlag("info-builder", new ServerInfoHandler(this.jsonManager.getConfig()));
     this.server.setGlobalFlag("compression-threshold", 100);
     this.server.setGlobalFlag("verify-users", false);

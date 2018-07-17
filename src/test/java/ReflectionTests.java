@@ -1,24 +1,22 @@
-import xyz.yooniks.proxy.user.Optionable;
+import static org.junit.Assert.assertEquals;
+
+import java.lang.reflect.Field;
+import org.junit.Test;
 
 public class ReflectionTests {
 
-  //private String text = "jakisText";
-  private Optionable<String> someOptionable = new Optionable<>("lool");
+  private String text = "jakisText";
 
-  public static void main(String... args) throws Exception {
+  @Test
+  public void reflectionTest() throws Exception {
+    final String fieldValue = this.text;
+
     final ReflectionTests tests = new ReflectionTests();
-
-    final Optionable<String> optionable = (Optionable<String>) tests.getClass()
-        .getDeclaredField("someOptionable")
-        .get(tests);
-    System.out.println(optionable.getValue());
-    /*final Field field = tests.getClass().getDeclaredField("text");
+    final Field field = tests.getClass().getDeclaredField("text");
     field.setAccessible(true);
 
-    System.out.println(field.get(tests));
-
     field.set(tests, "jakisText12312");
-    System.out.println(field.get(tests)); */
+    assertEquals(field.get(tests), fieldValue);
   }
 
 }
