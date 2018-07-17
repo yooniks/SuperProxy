@@ -32,9 +32,9 @@ public class PlayerSessionListener implements SessionListener {
     if (event.getPacket() instanceof ClientChatPacket) {
       final ClientChatPacket packet = event.getPacket();
       final String message = packet.getMessage();
-      final String commandName = StringUtils.replaceFirst(message, "!", "");
 
       final String[] args = message.split(" ");
+      final String commandName = StringUtils.replaceFirst(args[0], "!", "");
       final String[] argsForCommand = Arrays.copyOfRange(args, 1, args.length);
 
       this.commandManager

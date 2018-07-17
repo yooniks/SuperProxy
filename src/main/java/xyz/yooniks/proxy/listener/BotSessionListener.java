@@ -17,6 +17,7 @@ import org.spacehq.packetlib.tcp.TcpSessionFactory;
 import xyz.yooniks.proxy.entity.bot.Bot;
 import xyz.yooniks.proxy.entity.bot.BotManager;
 import xyz.yooniks.proxy.listener.packetstransmitter.handler.CaptchaHandler;
+import xyz.yooniks.proxy.listener.packetstransmitter.handler.CaptchaHandler.CaptchaHandlerChat;
 import xyz.yooniks.proxy.listener.packetstransmitter.handler.CaptchaHandler.Result;
 import xyz.yooniks.proxy.user.ProxyUser;
 import xyz.yooniks.proxy.user.ProxyUserOptions.BotMessageType;
@@ -101,12 +102,16 @@ public class BotSessionListener implements SessionListener {
         final String message = packet.getMessage().toString().toLowerCase();
 
         if (CaptchaHandler.findResult(message) == Result.DETECTED) {
-          final String[] args = message.split(":");
-          if (args.length < 2) {
-            return;
+          final String[] args;
+          if (message.contains(":")) {
+            args = message.split(":");
           }
-          new CaptchaHandler(StringUtils.replace(args[1], " ", ""))
-              .handle(null, event.getSession());
+          else {
+            args = message.split("to ");
+          }
+          final CaptchaHandler captchaHandler = new CaptchaHandlerChat(
+              StringUtils.replace(args[1], " ", ""));
+          captchaHandler.handle(null, event.getSession());
         }
       }
     }
