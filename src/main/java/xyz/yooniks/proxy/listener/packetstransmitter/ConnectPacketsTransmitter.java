@@ -1,5 +1,6 @@
 package xyz.yooniks.proxy.listener.packetstransmitter;
 
+import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 import org.spacehq.mc.auth.data.GameProfile;
 import org.spacehq.mc.protocol.MinecraftProtocol;
@@ -37,6 +38,7 @@ import org.spacehq.packetlib.event.session.PacketSentEvent;
 import org.spacehq.packetlib.event.session.SessionListener;
 import xyz.yooniks.proxy.entity.player.Player;
 import xyz.yooniks.proxy.listener.packetstransmitter.handler.CaptchaHandler;
+import xyz.yooniks.proxy.listener.packetstransmitter.handler.CaptchaHandler.CaptchaHandlerBossbar;
 import xyz.yooniks.proxy.listener.packetstransmitter.handler.CaptchaHandler.Result;
 import xyz.yooniks.proxy.message.MessageBuilder;
 import xyz.yooniks.proxy.user.ProxyUser;
@@ -71,11 +73,11 @@ public class ConnectPacketsTransmitter implements SessionListener {
   }
 
   @Override
-  public void connected(final ConnectedEvent connectedEvent) {
+  public void connected(ConnectedEvent connectedEvent) {
   }
 
   @Override
-  public void packetReceived(final PacketReceivedEvent event) {
+  public void packetReceived(PacketReceivedEvent event) {
     this.user.getOptions().getLastPacket().getTime().setValue(
         System.currentTimeMillis());
     this.user.getOptions().getLastPacket().getName().setValue(
@@ -120,43 +122,17 @@ public class ConnectPacketsTransmitter implements SessionListener {
         final String message = packet.getMessage().toString().toLowerCase();
 
         if (CaptchaHandler.findResult(message) == Result.DETECTED) {
-          final String[] args = message.split(":");
-          if (args.length < 2) {
-            return;
+          final String[] args;
+          if (message.contains(":")) {
+            args = message.split(":");
           }
-          new CaptchaHandler(StringUtils.replace(args[1], " ", ""))
-              .handle(this.player, event.getSession());
+          else {
+            args = message.split("to ");
+          }
+          final CaptchaHandler captchaHandler = new CaptchaHandlerBossbar(StringUtils.replace(args[1], " ", ""));
+          captchaHandler.handle(this.player, event.getSession());
         }
       }
-
-     /* if (packet.getMessage().toString().toLowerCase().contains("captcha:")
-          || packet.getMessage().toString().toLowerCase().contains("kod:")) {
-        final String message = packet.getMessage().toString();
-        final String[] args = message.split(":");
-        if (args.length < 2) {
-          return;
-        }
-        args[1] = StringUtils.replace(args[1], " ", "");
-        event.getSession()
-            .send(new ClientChatPacket("/register " + args[1] + " superproxy2137 superproxy2137"));
-        event.getSession()
-            .send(new ClientChatPacket("/register superproxy2137 superproxy2137 " + args[1]));
-        this.player.sendMessage("&7Wykryto kod captcha, autologowanie.. &8(&6" + args[1] + "&8)");
-      } else if (packet.getMessage().toString().toLowerCase().contains("kod")
-          && packet.getMessage().toString().toLowerCase().contains("to")) {
-        final String message = packet.getMessage().toString();
-        final String[] args = message.split("to ");
-        if (args.length < 2) {
-          return;
-        }
-        args[1] = StringUtils.replace(args[1], " ", "");
-        this.player.sendMessage("&7Wykryto kod captcha, autologowanie.. &8(&6" + args[1] + "&8)");
-        event.getSession()
-            .send(new ClientChatPacket("/register " + args[1] + " superproxy2137 superproxy2137"));
-        event.getSession()
-            .send(new ClientChatPacket("/register superproxy2137 superproxy2137 " + args[1]));
-      }*/
-      //}
     }
     //autocaptcha
     else if (event.getPacket() instanceof ServerSpawnPlayerPacket) {
@@ -167,31 +143,25 @@ public class ConnectPacketsTransmitter implements SessionListener {
       final ServerDisplayScoreboardPacket displayPacket = new ServerDisplayScoreboardPacket(
           ScoreboardPosition.BELOW_NAME, "superproxy-head");
       this.session.send(objectivePacket, displayPacket);
-    } else if (event.getPacket() instanceof ServerSpawnMobPacket) {
-      final ServerSpawnMobPacket p3 = event.getPacket();
-      for (int i = 0; i < p3.getMetadata().length; ++i) {
-        if (p3.getMetadata()[i].getType() == MetadataType.STRING) {
-          final String msg2 = p3.getMetadata()[i].getValue().toString();
-          if (msg2.toLowerCase().contains("captcha:") || msg2.toLowerCase().contains("kod:")) {
-            final String[] args2 = msg2.split(":");
-            if (args2.length < 2 || args2[1] == null) {
-              return;
+    }
+    else if (event.getPacket() instanceof ServerSpawnMobPacket) {
+      final ServerSpawnMobPacket packet = event.getPacket();
+      Arrays.stream(packet.getMetadata())
+          .filter(entityMetadata -> entityMetadata.getType() == MetadataType.STRING)
+          .map(entityMetadata -> (String) entityMetadata.getValue())
+          .forEach(message -> {
+            final String[] args;
+            if (message.contains(":")) {
+              args = message.split(":");
+            } else {
+              args = message.split("to ");
             }
-            args2[1] = args2[1].replace(" ", "");
-            args2[1] = args2[1].replace("§c", "");
-            args2[1] = args2[1].replace("§e", "");
-            args2[1] = args2[1].replace("§6", "");
-            args2[1] = args2[1].replace("§a", "");
-            args2[1] = args2[1].replace("§b", "");
-            args2[1] = args2[1].replace("§2", "");
-            event.getSession().send(
-                new ClientChatPacket("/register " + args2[1] + " superproxy2137 superproxy2137"));
-            event.getSession()
-                .send(new ClientChatPacket("/register superproxy2137 superproxy2137 " + args2[1]));
-          }
-        }
-      }
-    } else if (event.getPacket() instanceof ServerPluginMessagePacket) {
+            final CaptchaHandler captchaHandler = new CaptchaHandlerBossbar(
+                StringUtils.replace(args[1], " ", ""));
+            captchaHandler.handle(this.player, event.getSession());
+          });
+    }
+    else if (event.getPacket() instanceof ServerPluginMessagePacket) {
       final ServerPluginMessagePacket packet = event.getPacket();
       if (packet.getChannel().equals("MC|Brand")) {
         this.player.sendMessage("&7Silnik serwera: &6" + new String(packet.getData()));
