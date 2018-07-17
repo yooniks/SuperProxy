@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.Validate;
 import xyz.yooniks.proxy.command.Command;
 import xyz.yooniks.proxy.command.basic.CommandExecutor;
 import xyz.yooniks.proxy.command.basic.CommandInfo;
@@ -38,14 +39,17 @@ public class CommandManagerImpl implements CommandManager {
     try {
       this.registerCommandObject(clazz.newInstance());
     }
-    catch (InstantiationException | IllegalAccessException exception) {
-
-    }
+    //handle exception in future
+    catch (InstantiationException | IllegalAccessException ignored) {}
   }
 
   @Override
   public void registerCommandObject(CommandExecutor object) {
+    Validate.notNull(object, "CommandExecutor cannot be null!");
+
     final CommandInfo info = object.getClass().getDeclaredAnnotation(CommandInfo.class);
+    Validate.notNull(info, "Annonation cannot be null! Commands are annonation-based!");
+
     final Command command = new Command(info.name(), info.description(), info.aliases(), info.gameOnly(), object);
     this.commands.add(command);
   }
