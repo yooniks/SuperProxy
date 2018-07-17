@@ -18,14 +18,18 @@ public class CommandManagerImpl implements CommandManager {
 
   public Optional<Command> findConsoleCommand(String name) {
     return this.commands.stream()
-        .filter(command -> command.getName().equalsIgnoreCase(name) || command.getAliases().contains(name))
+        .filter(command ->
+            (command.getName().equalsIgnoreCase(name) || command.getAliases().contains(name))
+                && !command.isGameOnly())
         .findFirst();
   }
 
   @Override
   public Optional<Command> findGameCommand(String name) {
     return this.commands.stream()
-        .filter(command -> command.getName().equalsIgnoreCase(name) || command.getAliases().contains(name))
+        .filter(command ->
+            (command.getName().equalsIgnoreCase(name) || command.getAliases().contains(name))
+                && command.isGameOnly())
         .findFirst();
   }
 

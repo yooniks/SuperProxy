@@ -1,7 +1,6 @@
 package xyz.yooniks.proxy.command.game;
 
 import java.util.stream.Collectors;
-import xyz.yooniks.proxy.command.Command;
 import xyz.yooniks.proxy.command.basic.CommandExecutor;
 import xyz.yooniks.proxy.command.basic.CommandInfo;
 import xyz.yooniks.proxy.command.basic.CommandManager;
@@ -25,8 +24,7 @@ public class HelpCommand implements CommandExecutor {
     executor.sendMessage("&7Lista komend: ");
     executor.sendMessage(this.commandManager.getGameCommands()
         .stream()
-        .map(Command::getDescription)
-        .map(desc -> "&6" + desc)
+        .map(command -> "&6" + command.getName() + " &7 - " + command.getDescription())
         .collect(Collectors.joining("\n")));
   }
 
